@@ -64,8 +64,6 @@ class FaceParts(Dataset):
             transforms.RandomCrop((480, 480)),
             transforms.RandomHorizontalFlip(p),
             transforms.ToTensor(),
-            
-
         ])
         normalize_transform = transforms.Compose([
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -77,10 +75,11 @@ class FaceParts(Dataset):
         random.seed(seed)
         sample['image'] = composed_transforms(sample['image'])
         sample['label'] = composed_transforms(sample['label']) * 255
-        sample['label'] = sample['label'].int()
+        sample['label'] = sample['label'].long()[0, :, :]
         sample['image'] = normalize_transform(sample['image'])
 
         return sample
+
     def transform_val(self, sample):
         image_transforms = transforms.Compose([
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -114,9 +113,9 @@ if __name__ == "__main__":
     plt.figure('image')
     plt.imshow(image)
 
-
-    label = np.array(data['label'])[0, :, :]
-    print(np.max(label))
+    print(data['label'].size())
+    label = np.array(data['label'])
+    
     plt.figure('test')
     plt.imshow(label)
     plt.show()
