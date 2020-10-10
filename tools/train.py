@@ -13,15 +13,13 @@ import models.unet as unet
 from datasets.face import FaceParts
 
 
+
 # load model
 model = unet.Unet()
 model = model.cuda()
 # print(model)
 cudnn.benchmark = True
-inputs = torch.rand(2, 3, 480, 480)
-inputs = inputs.cuda()
-outputs = model(inputs)
-print(outputs.size())
+
 
 
 # load data
@@ -49,6 +47,9 @@ val_loader = DataLoader(
     batch_size=1,
     shuffle=False
     )
-print(len(train_loader))
-print(len(val_loader))
 
+if __name__ == "__main__":
+    inputs = torch.rand(2, 3, 480, 480)
+    inputs = inputs.cuda()
+    outputs = model(inputs)
+    print(outputs.size())
