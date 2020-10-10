@@ -76,7 +76,8 @@ class FaceParts(Dataset):
         seed = np.random.randint(2020)
         random.seed(seed)
         sample['image'] = composed_transforms(sample['image'])
-        sample['label'] = composed_transforms(sample['label'])
+        sample['label'] = composed_transforms(sample['label']) * 255
+        sample['label'] = sample['label'].int()
         sample['image'] = normalize_transform(sample['image'])
 
         return sample
@@ -97,7 +98,7 @@ class FaceParts(Dataset):
         return sample
 
 if __name__ == "__main__":
-    
+
     train_txt = '/home/aaron/Documents/datasets/face_seg/train_test/train.txt'
     val_txt = '/home/aaron/Documents/datasets/face_seg/train_test/test.txt'
     image_path = '/home/aaron/Documents/datasets/face_seg/CelebA-HQ-img'
@@ -114,8 +115,8 @@ if __name__ == "__main__":
     plt.imshow(image)
 
 
-    label = np.array(data['label'])
-    label = np.transpose(label, [1, 2, 0])[:,:,0]
+    label = np.array(data['label'])[0, :, :]
+    print(np.max(label))
     plt.figure('test')
     plt.imshow(label)
     plt.show()
